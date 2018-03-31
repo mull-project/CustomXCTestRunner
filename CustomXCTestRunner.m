@@ -63,20 +63,24 @@
 @end
 
 int CustomXCTestRunnerRun(void) {
-  CustomXCTestObserver *testObserver = [CustomXCTestObserver new];
+  int exitResult = 0;
 
-//  XCTestObservationCenter *center = [XCTestObservationCenter sharedTestObservationCenter];
-//  [center addTestObserver:testObserver];
+  @autoreleasepool {
+    CustomXCTestObserver *testObserver = [CustomXCTestObserver new];
 
-  XCTestSuite *suite = [XCTestSuite defaultTestSuite];
+  //  XCTestObservationCenter *center = [XCTestObservationCenter sharedTestObservationCenter];
+  //  [center addTestObserver:testObserver];
 
-  [suite runTest];
+    XCTestSuite *suite = [XCTestSuite defaultTestSuite];
 
-//  NSLog(@"RunXCTests: tests failed: %tu", testObserver.testsFailed);
+    [suite runTest];
 
-  if (testObserver.testsFailed > 0) {
-    return 1;
+  //  NSLog(@"RunXCTests: tests failed: %tu", testObserver.testsFailed);
+
+    if (testObserver.testsFailed > 0) {
+      exitResult = 1;
+    }
   }
 
-  return 0;
+  return exitResult;
 }
