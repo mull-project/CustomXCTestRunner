@@ -9,6 +9,6 @@
 #ifndef CustomXCTestRunner_h
 #define CustomXCTestRunner_h
 
-extern int CustomXCTestRunnerRun(void);
+extern int CustomXCTestRunnerRunAll(void);
 
 #endif /* CustomXCTestRunner_h */

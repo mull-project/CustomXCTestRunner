@@ -26,8 +26,8 @@ int main(int argc, const char * argv[]) {
   @autoreleasepool {
     NSLog(@"Hello, World!");
 
-    testRunResult = CustomXCTestRunnerRun();
-    testRunResult = CustomXCTestRunnerRun();
+    testRunResult = CustomXCTestRunnerRunAll();
+    testRunResult = CustomXCTestRunnerRunAll();
 
   }
   return testRunResult;

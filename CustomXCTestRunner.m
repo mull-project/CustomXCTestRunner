@@ -84,7 +84,7 @@ static void ObjCEnumerateRuntimeClasses(void(^callback)(Class)) {
   free(classes);
 }
 
-int CustomXCTestRunnerRun(void) {
+int CustomXCTestRunnerRunAll(void) {
   int exitResult = 0;
 
   @autoreleasepool {
