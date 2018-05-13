@@ -27,6 +27,8 @@ int main(int argc, const char * argv[]) {
     NSLog(@"Hello, World!");
 
     testRunResult = CustomXCTestRunnerRun();
+    testRunResult = CustomXCTestRunnerRun();
+
   }
   return testRunResult;
 }

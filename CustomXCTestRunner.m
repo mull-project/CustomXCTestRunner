@@ -11,6 +11,8 @@
 #import <XCTest/XCTest.h>
 #import <XCTest/XCTestObservationCenter.h>
 
+#import <objc/runtime.h>
+
 @interface CustomXCTestObserver : NSObject <XCTestObservation>
 @property (assign, nonatomic) NSUInteger testsFailed;
 @end
@@ -50,17 +52,37 @@
 //        testSuite, description, filePath, lineNumber);
 //}
 //
-//- (void)testCase:(XCTestCase *)testCase didFailWithDescription:(NSString *)description inFile:(NSString *)filePath atLine:(NSUInteger)lineNumber {
-//  NSLog(@"testCase:didFailWithDescription:inFile:atLine: %@ %@ %@ %tu",
-//        testCase, description, filePath, lineNumber);
-//  self.testsFailed++;
-//}
-//
+- (void)testCase:(XCTestCase *)testCase didFailWithDescription:(NSString *)description inFile:(NSString *)filePath atLine:(NSUInteger)lineNumber {
+  //NSLog(@"testCase:didFailWithDescription:inFile:atLine: %@ %@ %@ %tu",
+  //      testCase, description, filePath, lineNumber);
+  self.testsFailed++;
+}
+
 //- (void)testCaseDidFinish:(XCTestCase *)testCase {
 //  NSLog(@"testCaseWillFinish: %@", testCase);
 //}
 
 @end
+
+static void ObjCEnumerateRuntimeClasses(void(^callback)(Class)) {
+  int numClasses;
+  numClasses = objc_getClassList(NULL, 0);
+
+  if (numClasses == 0) {
+    return;
+  }
+
+  Class * classes = (Class *)malloc(sizeof(Class) * numClasses);
+  numClasses = objc_getClassList(classes, numClasses);
+
+  for (int i = 0; i < numClasses; i++) {
+    Class runtimeClass = classes[i];
+
+    callback(runtimeClass);
+  }
+
+  free(classes);
+}
 
 int CustomXCTestRunnerRun(void) {
   int exitResult = 0;
@@ -68,12 +90,26 @@ int CustomXCTestRunnerRun(void) {
   @autoreleasepool {
     CustomXCTestObserver *testObserver = [CustomXCTestObserver new];
 
-  //  XCTestObservationCenter *center = [XCTestObservationCenter sharedTestObservationCenter];
-  //  [center addTestObserver:testObserver];
+    Class xcTestCaseClass = NSClassFromString(@"XCTestCase");
+    NSCAssert(xcTestCaseClass, nil);
 
-    XCTestSuite *suite = [XCTestSuite defaultTestSuite];
+    XCTestSuite *customXCTestRunnerSuite =
+      [[XCTestSuite alloc] initWithName:@"CustomXCTestRunner Suite"];
 
-    [suite runTest];
+    ObjCEnumerateRuntimeClasses(^(__unsafe_unretained Class runtimeClass) {
+      if (class_getSuperclass(runtimeClass) != xcTestCaseClass) {
+        return;
+      }
+
+      XCTestSuite *suite = [XCTestSuite testSuiteForTestCaseClass:runtimeClass];
+
+      [customXCTestRunnerSuite addTest:suite];
+    });
+
+    XCTestObservationCenter *center = [XCTestObservationCenter sharedTestObservationCenter];
+    [center addTestObserver:testObserver];
+
+    [customXCTestRunnerSuite runTest];
 
   //  NSLog(@"RunXCTests: tests failed: %tu", testObserver.testsFailed);
 
