@@ -2,13 +2,13 @@ CC=/opt/llvm-3.9/bin/clang
 # CC=/opt/llvm-5.0.0/bin/clang
 SYSROOT=-isysroot $(shell xcrun --sdk macosx --show-sdk-path)
 
-MACOS_FRAMEWORKS_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks
+MACOS_FRAMEWORKS_DIR=/Applications/Xcode-9.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks
 # XCTEST_PATH=$(MACOS_FRAMEWORKS_DIR)/XCTest.framework/XCTest
 XCTEST_FLAGS=-F$(MACOS_FRAMEWORKS_DIR) -framework XCTest
 
 CCFLAGS=$(SYSROOT)
 
-compile: compile.dylib
+compile: compile.dylib compile.bc
 
 compile.dylib:
 	$(CC) \
@@ -18,4 +18,11 @@ compile.dylib:
 	  -o CustomXCTestRunner.dylib \
 	  CustomXCTestRunner.m
 
+compile.bc:
+	$(CC) \
+	  $(CCFLAGS) \
+          -fobjc-arc -emit-llvm -c \
+          -F$(MACOS_FRAMEWORKS_DIR) \
+	  CustomXCTestRunner.m \
+	  -o CustomXCTestRunner.bc
 
