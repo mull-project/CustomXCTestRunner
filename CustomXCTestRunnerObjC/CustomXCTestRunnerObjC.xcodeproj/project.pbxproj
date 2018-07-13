@@ -252,7 +252,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 399ZF6384C;
-				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "/Applications/Xcode-9.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -263,7 +263,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 399ZF6384C;
-				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "/Applications/Xcode-9.3.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

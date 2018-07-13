@@ -89,7 +89,6 @@ int CustomXCTestRunnerRunAll(void) {
 
   @autoreleasepool {
     CustomXCTestObserver *testObserver = [CustomXCTestObserver new];
-
     Class xcTestCaseClass = NSClassFromString(@"XCTestCase");
     NSCAssert(xcTestCaseClass, nil);
 
@@ -107,11 +106,9 @@ int CustomXCTestRunnerRunAll(void) {
     });
 
     XCTestObservationCenter *center = [XCTestObservationCenter sharedTestObservationCenter];
-    [center addTestObserver:testObserver];
+//    [center addTestObserver:testObserver];
 
     [customXCTestRunnerSuite runTest];
-
-  //  NSLog(@"RunXCTests: tests failed: %tu", testObserver.testsFailed);
 
     if (testObserver.testsFailed > 0) {
       exitResult = 1;
@@ -119,4 +116,60 @@ int CustomXCTestRunnerRunAll(void) {
   }
 
   return exitResult;
+}
+
+static NSString *getTestName(NSString *fullTestName) {
+  NSString *searchedString = fullTestName;
+  NSRange searchedRange = NSMakeRange(0, [searchedString length]);
+
+  NSString *pattern = @"^-\\[[A-Za-z0-9_]+ ([A-Za-z0-9_]+)\\]$";
+  NSError  *error = nil;
+
+  NSRegularExpression* regex =
+  [NSRegularExpression regularExpressionWithPattern:pattern
+                                            options:0
+                                              error:&error];
+
+  NSArray *matches = [regex matchesInString:searchedString
+                                    options:0
+                                      range:searchedRange];
+
+  if (matches.count == 0) {
+    return nil;
+  }
+
+  for (NSTextCheckingResult* match in matches) {
+//    NSString *matchText = [searchedString substringWithRange:[match range]];
+    NSRange group1 = [match rangeAtIndex:1];
+    return [searchedString substringWithRange:group1];
+  }
+  return nil;
+}
+
+void CustomXCTestRunnerPrintAllTests(void) {
+  Class xcTestCaseClass = NSClassFromString(@"XCTestCase");
+  NSCAssert(xcTestCaseClass, nil);
+
+  NSMutableArray <NSString *> *tests = [NSMutableArray new];
+  ObjCEnumerateRuntimeClasses(^(__unsafe_unretained Class runtimeClass) {
+    if (class_getSuperclass(runtimeClass) != xcTestCaseClass) {
+      return;
+    }
+
+    XCTestSuite *suite = [XCTestSuite testSuiteForTestCaseClass:runtimeClass];
+
+    for (XCTest *xcTest in suite.tests) {
+      NSString *testName = getTestName(xcTest.name);
+      if (testName == nil) {
+        continue;
+      }
+
+      NSString *test = [NSString stringWithFormat:@"%@.%@", xcTest.className, testName];
+
+      [tests addObject:test];
+    }
+  });
+
+  NSString *allTestsString = [tests componentsJoinedByString:@","];
+  printf("%s\n", allTestsString.UTF8String);
 }

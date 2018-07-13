@@ -1,4 +1,4 @@
-CC=/opt/llvm-3.9/bin/clang
+CC=/opt/llvm-6.0.0/bin/clang
 # CC=/opt/llvm-5.0.0/bin/clang
 SYSROOT=-isysroot $(shell xcrun --sdk macosx --show-sdk-path)
 
@@ -19,10 +19,11 @@ compile.dylib:
 	  CustomXCTestRunner.m
 
 compile.bc:
-	$(CC) \
-	  $(CCFLAGS) \
-          -fobjc-arc -emit-llvm -c \
+	$(CC) $(CCFLAGS) \
           -F$(MACOS_FRAMEWORKS_DIR) \
+          -fobjc-arc \
+          -emit-llvm \
 	  CustomXCTestRunner.m \
+	  -c \
 	  -o CustomXCTestRunner.bc
 

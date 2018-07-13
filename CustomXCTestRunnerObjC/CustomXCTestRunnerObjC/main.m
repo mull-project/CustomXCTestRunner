@@ -21,13 +21,25 @@
 }
 @end
 
+@interface TestCase2 : XCTestCase
+- (void)testHelloWorld2;
+@end
+
+@implementation TestCase2
+- (void)testHelloWorld2 {
+  XCTAssert(YES);
+}
+@end
+
 int main(int argc, const char * argv[]) {
   int testRunResult = 0;
   @autoreleasepool {
     NSLog(@"Hello, World!");
 
-    testRunResult = CustomXCTestRunnerRunAll();
-    testRunResult = CustomXCTestRunnerRunAll();
+//    testRunResult = CustomXCTestRunnerRunAll();
+//    testRunResult = CustomXCTestRunnerRunAll();
+
+    CustomXCTestRunnerPrintAllTests();
 
   }
   return testRunResult;
