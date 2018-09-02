@@ -10,5 +10,7 @@
 #define CustomXCTestRunner_h
 
 extern int CustomXCTestRunnerRunAll(void);
+extern int CustomXCTestRunnerRunOne(const char *const testName);
+extern void CustomXCTestRunnerPrintAllTests(char *output);
 
 #endif /* CustomXCTestRunner_h */
