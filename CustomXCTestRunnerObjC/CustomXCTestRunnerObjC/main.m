@@ -36,10 +36,14 @@ int main(int argc, const char * argv[]) {
   @autoreleasepool {
     NSLog(@"Hello, World!");
 
-//    testRunResult = CustomXCTestRunnerRunAll();
-//    testRunResult = CustomXCTestRunnerRunAll();
+    testRunResult = CustomXCTestRunnerRunAll();
+    testRunResult = CustomXCTestRunnerRunAll();
 
-    CustomXCTestRunnerPrintAllTests();
+    char tests[1024];
+    CustomXCTestRunnerPrintAllTests(tests);
+
+    printf("tests: %s\n", tests);
+    CustomXCTestRunnerRunOne("TestCase1.testHelloWorld1");
 
   }
   return testRunResult;
